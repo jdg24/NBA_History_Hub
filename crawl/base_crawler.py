@@ -1,3 +1,4 @@
+import config
 import requests
 from bs4 import BeautifulSoup
 
@@ -10,4 +11,4 @@ class BaseCrawler:
         return response.text
 
     def get_soup(self, response):
-        return BeautifulSoup(response, features="html.parser")
+        return BeautifulSoup(response, features=config.bs4_parser)
