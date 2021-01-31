@@ -52,13 +52,33 @@ def teams(league):
 
 
 @app.route("/leagues/<league>/teams/<team>/games")
-def games(league, team):
+def games_by_league_and_team(league,team):
     date = request.args.get("date")
 
     if date is None:
         return "Please pass a date query parameter in the format YYYY-MM-DD."
-
-    return jsonify([{"league": league, "team": team, "date": date}])
+    query = f"""
+        SELECT
+            league.league_abbr,
+            game.game_season,
+            game.game_date,
+            team.team_abbr,
+            opponent.team_abbr AS opponent_abbr,
+            game.team_points,
+            game.opponent_points
+    FROM tblGameRaw game
+    INNER JOIN tblTeam team
+        ON game.team_id = team.id
+    INNER JOIN tblTeam opponent
+        ON game.opponent_id = opponent.id
+    INNER JOIN tblLeague league
+        ON team.league_id = league.id
+    WHERE league.league_abbr = '{league}'
+    AND team.team_abbr = '{team}'
+    AND game.game_date = '{date}'  
+    """
+    query_result = execute_query(query)
+    return jsonify(query_result)
 
 
 if __name__ == "__main__":
