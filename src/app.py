@@ -57,11 +57,10 @@ def games_by_league_and_team(league,team):
 
     if date is None:
         return "Please pass a date query parameter in the format YYYY-MM-DD."
+   
     query = f"""
         SELECT
-            league.league_abbr,
             game.game_season,
-            game.game_date,
             team.team_abbr,
             opponent.team_abbr AS opponent_abbr,
             game.team_points,
@@ -77,6 +76,7 @@ def games_by_league_and_team(league,team):
     AND team.team_abbr = '{team}'
     AND game.game_date = '{date}'  
     """
+    
     query_result = execute_query(query)
     return jsonify(query_result)
 
@@ -86,11 +86,10 @@ def games_by_league(league):
 
     if date is None:
         return "Please pass a date query parameter in the format YYYY-MM-DD."
+    
     query =f"""
     SELECT
-        league.league_abbr,
         game.game_season,
-        game.game_date,
         team.team_abbr,
         opponent.team_abbr AS opponent_abbr,
         game.team_points,
@@ -105,6 +104,7 @@ def games_by_league(league):
     WHERE league.league_abbr = '{league}'
     AND game.game_date = '{date}'
     """
+    
     query_result = execute_query(query)
     return jsonify(query_result)
 
